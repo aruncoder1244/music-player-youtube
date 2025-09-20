@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Player</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #89f7fe, #66a6ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .music-player {
+      background: #fff;
+      width: 380px;
+      padding: 30px 25px;
+      text-align: center;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    nav .circle {
+      background: #66a6ff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    nav .circle:hover {
+      background: #ddd;
+      transform: scale(1.1);
+    }
+
+    .song-img {
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      border: 6px solid #66a6ff;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      object-fit: cover;
+    }
+
+    .music-player h1 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+      margin-top: 18px;
+    }
+
+    .music-player p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    /* Progress bar */
+    .progress {
+      background: #eee;
+      height: 6px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 15px 0;
+      position: relative;
+    }
+
+    .progress .bar {
+      background: #66a6ff;
+      height: 100%;
+      width: 0%;
+      border-radius: 5px;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    .controls i {
+      font-size: 22px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .controls i:hover {
+      color: #66a6ff;
+      transform: scale(1.2);
+    }
+
+    .play-btn {
+      background: #66a6ff;
+      color: #fff;
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      transition: 0.3s;
+    }
+
+    .play-btn:hover {
+      background: #558de8;
+      transform: scale(1.1);
+    }
+
+    /* Volume */
+    .volume-control {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .volume-control input {
+      width: 150px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="music-player">
+    <nav>
+      <div class="circle">
+        <i class="fa-solid fa-angles-left"></i>
+      </div>
+      <div class="circle">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+    </nav>
+
+    <img src="" class="song-img" id="song-img">
+    <h1 id="song-title">Song Name</h1>
+    <p id="song-artist">Artist</p>
+
+    <!-- Progress bar -->
+    <div class="progress">
+      <div class="bar"></div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+      <i class="fa-solid fa-backward" id="prev"></i>
+      <div class="play-btn"><i class="fa-solid fa-play"></i></div>
+      <i class="fa-solid fa-forward" id="next"></i>
+    </div>
+
+    <!-- Volume -->
+    <div class="volume-control">
+      <i class="fa-solid fa-volume-low"></i>
+      <input type="range" min="0" max="100" value="60">
+      <i class="fa-solid fa-volume-high"></i>
+    </div>
+  </div>
+
+  <!-- Audio file -->
+  <audio id="song"></audio>
+
+  <!-- JavaScript -->
+  <script>
+    let song = document.getElementById("song");
+    let playBtn = document.querySelector(".play-btn i");
+    let progressBar = document.querySelector(".progress .bar");
+    let progress = document.querySelector(".progress");
+    let volumeSlider = document.querySelector(".volume-control input");
+
+    let songTitle = document.getElementById("song-title");
+    let songArtist = document.getElementById("song-artist");
+    let songImg = document.getElementById("song-img");
+
+    // Playlist Array
+    let playlist = [
+  {
+    title: "Saiyaara",
+    artist: "Faheem Abdullah",
+    src: "music/Saiyaara.mp3",
+    img: "https://akm-img-a-in.tosshub.com/indiatoday/images/story/202507/saiyaara-284041453-1x1.png"
+  },
+  {
+    title: "Deewaniyat",
+    artist: "Vishal Mishra",
+    src: "music/Deewaniyat.mp3",
+    img: "https://i.scdn.co/image/ab67616d0000b2739411c63637b6d976a7d0e279"
+  },
+  {
+    title: "Baggi 4",
+    artist: "Imran Khan",
+    src: "music/Baggi4.mp3",
+    img: "https://a10.gaanacdn.com/gn_img/albums/9En3peWXDV/n3pzxxx0bX/size_m.webp"
+  },
+  {
+    title: "Kaisa Ye Ishq Hai",
+    artist: "Guru Randhawa",
+    src: "music/Kaisayeishqhai.mp3",
+    img: "https://i1.sndcdn.com/artworks-EFPPKK7Zk8qLvpq8-OVfrbg-t500x500.jpg"
+  },
+  {
+    title: "Lambiyaan Si Judaiyaan",
+    artist: "Arijit Singh",
+    src: "music/Arjeet.mp3",
+    img: "https://i.ytimg.com/vi/vc-KxBjIbgI/0.jpg"
+  },
+  {
+    title: "Humnava",
+    artist: "Emraan Hashmi",
+    src: "music/Humnava.mp3",
+    img: "https://i.ytimg.com/vi/FOkVXadnO88/hq720.jpg"
+  },
+];
+
+
+    let currentSongIndex = 0;
+
+    // Load Song
+    function loadSong(index) {
+      let track = playlist[index];
+      song.src = track.src;
+      songTitle.innerText = track.title;
+      songArtist.innerText = track.artist;
+      songImg.src = track.img;
+    }
+
+    loadSong(currentSongIndex);
+
+    // Play & Pause
+    playBtn.addEventListener("click", () => {
+      if (song.paused) {
+        song.play();
+        playBtn.classList.replace("fa-play", "fa-pause");
+      } else {
+        song.pause();
+        playBtn.classList.replace("fa-pause", "fa-play");
+      }
+    });
+
+    // Update Progress Bar
+    song.addEventListener("timeupdate", () => {
+      let progressPercent = (song.currentTime / song.duration) * 100;
+      progressBar.style.width = progressPercent + "%";
+    });
+
+    // Seek Functionality
+    progress.addEventListener("click", (e) => {
+      let width = progress.clientWidth;
+      let clickX = e.offsetX;
+      let duration = song.duration;
+      song.currentTime = (clickX / width) * duration;
+    });
+
+    // Volume Control
+    volumeSlider.addEventListener("input", () => {
+      song.volume = volumeSlider.value / 100;
+    });
+
+    // Next Song
+    document.getElementById("next").addEventListener("click", () => {
+      currentSongIndex = (currentSongIndex + 1) % playlist.length;
+      loadSong(currentSongIndex);
+      song.play();
+      playBtn.classList.replace("fa-play", "fa-pause");
+    });
+
+    // Previous Song
+    document.getElementById("prev").addEventListener("click", () => {
+      currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+      loadSong(currentSongIndex);
+      song.play();
+      playBtn.classList.replace("fa-play", "fa-pause");
+    });
+
+    // Auto Next After End
+    song.addEventListener("ended", () => {
+      currentSongIndex = (currentSongIndex + 1) % playlist.length;
+      loadSong(currentSongIndex);
+      song.play();
+    });
+  </script>
+</body>
+
+</html>

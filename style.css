@@ -1,0 +1,43 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+
+}
+.container{
+    background-color: aquamarine;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.music-player{
+background-color: navajowhite;
+width: 400px;
+height: 400px;
+padding: 25px 35px;
+text-align: center;
+}
+nav{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+.song-img{
+width: 300px;
+border-radius: 50%;
+border: 5px solid black;
+box-shadow: 0 10px 60px ;
+}
+.music-player h1{
+font-size: 20px;
+font-weight: 400;
+color: black;
+margin-top: 20px;
+}
+.music-player p{
+    font-size: 14px;
+    color: black;
+}
